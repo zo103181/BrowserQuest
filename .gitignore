@@ -1,8 +1,6 @@
 node_modules
-client-build
-build.txt
-config_build.json
-config_local*
+dist
 client/audio/music
 .DS_Store
 *.swp
+.idea

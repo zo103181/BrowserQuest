@@ -1,13 +1,12 @@
 BrowserQuest server documentation
 =================================
 
-The game server currently runs on nodejs v0.4.7 (but should run fine on the latest stable as well) and requires the latest versions of the following npm libraries:
+The game server requires nodejs 6.x or greater.
 
-- underscore
+- lodash
 - log
-- bison
-- websocket
-- websocket-server
+- express
+- socket.io
 - sanitizer
 - memcache (only if you want metrics)
 
@@ -18,15 +17,20 @@ Configuration
 -------------
 
 The server settings (number of worlds, number of players per world, etc.) can be configured.
-Copy `config_local.json-dist` to a new `config_local.json` file, then edit it. The server will override default settings with this file.
+Modify `config.json` or create a new file and specify the path when running the server with the second argument, e.g: `yarn watch:server ./config-prod.json`
+
+Development
+-----------
+
+To launch the application for development, simply run `yarn watch:servr`
 
 
 Deployment
 ----------
 
-In order to deploy the server, simply copy the `server` and `shared` directories to the staging/production server.
+In order to deploy the server, simply run `yarn build:server` and copy the `dist/server` and `dist/shared` directories to the staging/production server.
 
-Then run `node server/js/main.js` in order to start the server.
+Then run `node server/ts/main.js` in order to start the server.
 
 
 Note: the `shared` directory is the only one in the project which is a server dependency.

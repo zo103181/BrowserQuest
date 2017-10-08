@@ -1,14 +1,32 @@
 {
-    "name": "BrowserQuest"
-  , "version": "0.0.1"
-  , "private": false 
-  , "dependencies": {
-    "underscore": ">0"
-    , "log": ">0"
-    , "bison": ">0"
-    , "websocket": ">0"
-    , "websocket-server": ">0"
-    , "sanitizer": ">0"
-    , "memcache": ">0"
+  "name": "fate-of-the-four",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "watch:client": "./node_modules/.bin/webpack-dev-server --env.NODE_ENV=dev --config ./webpack.config.js --content-base client/ --inline --progress --watch --open",
+    "watch:server": "nodemon -e ts  --exec \"npm run build:server\"",
+    "build:client": "NODE_ENV=production webpack --env.NODE_ENV=prod --config ./webpack.config.js  --progress --profile --color --display-error-details --display-cached --bail",
+    "build:server": "tsc -p ./server && node dist/server/ts/main.js",
+    "test": ""
+  },
+  "dependencies": {
+    "express": "^4.16.1",
+    "jquery": "^2.2.4",
+    "lodash": "3.10.1",
+    "log": ">0",
+    "sanitizer": "^0.1.3",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/jquery": "^2.0.46",
+    "@types/lodash": "^3.10.1",
+    "@types/node": "^8.0.31",
+    "awesome-typescript-loader": "^3.2.3",
+    "copy-webpack-plugin": "^4.1.0",
+    "html-webpack-plugin": "^2.30.1",
+    "typescript": "^2.5.3",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
   }
 }

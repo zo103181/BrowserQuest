@@ -2,7 +2,7 @@
 var Log = require('log'),
     _ = require('underscore'),
     log = new Log(Log.DEBUG),
-    Types = require("../../shared/js/gametypes");
+    Types = require("../../shared/ts/gametypes");
 
 var map,
     mode,
