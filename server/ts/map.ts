@@ -29,7 +29,7 @@ export class Map {
 
     fs.exists(filepath, function (exists) {
       if (!exists) {
-        log.error(filepath + ' doesnt exist.');
+        console.error(filepath + ' doesnt exist.');
         return;
       }
 
@@ -107,7 +107,7 @@ export class Map {
           tileIndex += 1;
         }
       }
-      //log.info("Collision grid generated.");
+      //console.info("Collision grid generated.");
     }
   }
 
@@ -161,7 +161,7 @@ export class Map {
     // groups connected via doors
     _.each(this.connectedGroups[id], function (position) {
       // don't add a connected group if it's already part of the surrounding ones.
-      if (!_.any(list, function (groupPos) {
+      if (!_.some(list, function (groupPos) {
           return equalPositions(groupPos, position);
         })) {
         list.push(position);

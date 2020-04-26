@@ -158,7 +158,7 @@ export class Character extends Entity {
     if (this.request_path_callback) {
       return this.request_path_callback(x, y);
     } else {
-      log.error(this.id + ' couldnt request pathfinding to ' + x + ', ' + y);
+      console.error(this.id + ' couldnt request pathfinding to ' + x + ', ' + y);
       return [];
     }
   }
@@ -439,7 +439,7 @@ export class Character extends Entity {
     if (!this.isAttackedBy(character)) {
       this.attackers[character.id] = character;
     } else {
-      log.error(this.id + ' is already attacked by ' + character.id);
+      console.error(this.id + ' is already attacked by ' + character.id);
     }
   }
 
@@ -451,7 +451,7 @@ export class Character extends Entity {
     if (this.isAttackedBy(character)) {
       delete this.attackers[character.id];
     } else {
-      log.error(this.id + ' is not attacked by ' + character.id);
+      console.error(this.id + ' is not attacked by ' + character.id);
     }
   }
 
@@ -477,7 +477,7 @@ export class Character extends Entity {
       this.unconfirmedTarget = null;
       this.target = character;
     } else {
-      log.debug(character.id + ' is already the target of ' + this.id);
+      console.debug(character.id + ' is already the target of ' + this.id);
     }
   }
 

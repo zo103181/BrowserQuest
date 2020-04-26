@@ -50,7 +50,7 @@ export class FormatChecker {
       });
     }
     else {
-      log.error('Unknown message type: ' + type);
+      console.error('Unknown message type: ' + type);
       return false;
     }
   }

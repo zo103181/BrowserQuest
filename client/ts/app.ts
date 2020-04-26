@@ -68,7 +68,7 @@ export class App {
         }
         this.$playDiv.unbind('click');
         var watchCanStart = setInterval(function () {
-          log.debug('waiting...');
+          console.debug('waiting...');
           if (self.canStartGame()) {
             setTimeout(function () {
               if (!self.isMobile) {
@@ -166,8 +166,8 @@ export class App {
   }
 
   toggleButton() {
-    var name = $('#parchment input').val(),
-      $play = $('#createcharacter .play');
+    let name = $('#parchment input').val();
+    let $play = $('#createcharacter .play');
 
     if (name && name.length > 0) {
       $play.removeClass('disabled');

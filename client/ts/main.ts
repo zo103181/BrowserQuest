@@ -165,7 +165,7 @@ var initApp = function () {
     $('#resize-check').bind('webkitTransitionEnd', app.resizeUi.bind(app));
     $('#resize-check').bind('oTransitionEnd', app.resizeUi.bind(app));
 
-    log.info('App initialized.');
+    console.info('App initialized.');
 
     initGame();
   });

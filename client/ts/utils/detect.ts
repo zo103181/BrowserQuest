@@ -26,6 +26,7 @@ export class Detect {
   };
 
   static canPlayMP3() {
+    return true;
     // return Modernizr.audio.mp3;
   };
 

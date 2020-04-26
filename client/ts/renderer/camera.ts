@@ -28,9 +28,9 @@ export class Camera {
     this.gridW = 15 * factor;
     this.gridH = 7 * factor;
 
-    log.debug('---------');
-    log.debug('Factor:' + factor);
-    log.debug('W:' + this.gridW + ' H:' + this.gridH);
+    console.debug('---------');
+    console.debug('Factor:' + factor);
+    console.debug('W:' + this.gridW + ' H:' + this.gridH);
   }
 
   setPosition(x, y) {

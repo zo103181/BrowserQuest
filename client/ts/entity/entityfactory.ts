@@ -12,7 +12,7 @@ export const EntityFactory: any = {};
 
 EntityFactory.createEntity = function (kind, id, name) {
   if (!kind) {
-    log.error('kind is undefined', true);
+    console.error('kind is undefined', true);
     return;
   }
 

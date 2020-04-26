@@ -33,7 +33,7 @@ export class Transition {
     if (this.inProgress) {
       if (this.count > 0) {
         this.count -= 1;
-        log.debug(currentTime + ': jumped frame');
+        console.debug(currentTime + ': jumped frame');
       }
       else {
         var elapsed = currentTime - this.startTime;

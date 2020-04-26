@@ -82,7 +82,7 @@ export class GameClient {
     var url = 'http://' + this.host + ':' + this.port + '/',
       self = this;
 
-    log.info('Trying to connect to server : ' + url);
+    console.info('Trying to connect to server : ' + url);
 
 
     this.connection = io(url, {'force new connection': true});
@@ -150,7 +150,7 @@ export class GameClient {
       this.handlers[action].call(this, data);
     }
     else {
-      log.error('Unknown action : ' + action);
+      console.error('Unknown action : ' + action);
     }
   }
 

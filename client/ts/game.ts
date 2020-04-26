@@ -147,6 +147,7 @@ export class Game {
 
   setRenderer(renderer) {
     this.renderer = renderer;
+    console.log('setRenderer:', this.renderer);
   }
 
   setUpdater(updater) {
@@ -172,7 +173,7 @@ export class Game {
 
 
     this.map.ready(function () {
-      log.info('Map loaded.');
+      console.info('Map loaded.');
       var tilesetIndex = self.renderer.upscaledRendering ? 0 : self.renderer.scale - 1;
       self.renderer.setTileset(self.map.tilesets[tilesetIndex]);
     });
@@ -187,7 +188,7 @@ export class Game {
     this.player.setSprite(this.sprites[this.player.getSpriteName()]);
     this.player.idle();
 
-    log.debug('Finished initPlayer');
+    console.debug('Finished initPlayer');
   }
 
   initShadows() {
@@ -264,6 +265,7 @@ export class Game {
   }
 
   loadSprite(name) {
+    console.log('loadSprite:', this.renderer);
     if (this.renderer.upscaledRendering) {
       this.spritesets[0][name] = new Sprite(name, 1);
     } else {
@@ -293,16 +295,16 @@ export class Game {
   }
 
   loadSprites() {
-    log.info('Loading sprites...');
+    console.info('Loading sprites...', this);
     this.spritesets = [];
     this.spritesets[0] = {};
     this.spritesets[1] = {};
     this.spritesets[2] = {};
-    _.map(this.spriteNames, this.loadSprite, this);
+    _.map(this.spriteNames, spriteName => this.loadSprite(spriteName), this);
   }
 
   spritesLoaded() {
-    if (_.any(this.sprites, function (sprite: Sprite) {
+    if (_.some(this.sprites, function (sprite: Sprite) {
         return !sprite.isLoaded;
       })) {
       return false;
@@ -315,7 +317,7 @@ export class Game {
       this.currentCursor = this.cursors[name];
       this.currentCursorOrientation = orientation;
     } else {
-      log.error('Unknown cursor name :' + name);
+      console.error('Unknown cursor name :' + name);
     }
   }
 
@@ -375,7 +377,7 @@ export class Game {
       }
     }
     else {
-      log.error('This entity already exists : ' + entity.id + ' (' + entity.kind + ')');
+      console.error('This entity already exists : ' + entity.id + ' (' + entity.kind + ')');
     }
   }
 
@@ -385,7 +387,7 @@ export class Game {
       delete this.entities[entity.id];
     }
     else {
-      log.error('Cannot remove entity. Unknown ID : ' + entity.id);
+      console.error('Cannot remove entity. Unknown ID : ' + entity.id);
     }
   }
 
@@ -402,7 +404,7 @@ export class Game {
       this.removeFromRenderingGrid(item, item.gridX, item.gridY);
       delete this.entities[item.id];
     } else {
-      log.error('Cannot remove item. Unknown ID : ' + item.id);
+      console.error('Cannot remove item. Unknown ID : ' + item.id);
     }
   }
 
@@ -414,7 +416,7 @@ export class Game {
         this.pathingGrid[i][j] = this.map.grid[i][j];
       }
     }
-    log.info('Initialized the pathing grid with static colliding cells.');
+    console.info('Initialized the pathing grid with static colliding cells.');
   }
 
   initEntityGrid() {
@@ -425,7 +427,7 @@ export class Game {
         this.entityGrid[i][j] = {};
       }
     }
-    log.info('Initialized the entity grid.');
+    console.info('Initialized the entity grid.');
   }
 
   initRenderingGrid() {
@@ -436,7 +438,7 @@ export class Game {
         this.renderingGrid[i][j] = {};
       }
     }
-    log.info('Initialized the rendering grid.');
+    console.info('Initialized the rendering grid.');
   }
 
   initItemGrid() {
@@ -447,7 +449,7 @@ export class Game {
         this.itemGrid[i][j] = {};
       }
     }
-    log.info('Initialized the item grid.');
+    console.info('Initialized the item grid.');
   }
 
   /**
@@ -468,7 +470,7 @@ export class Game {
         self.animatedTiles.push(tile);
       }
     }, 1);
-    //log.info("Initialized animated tiles.");
+    //console.info("Initialized animated tiles.");
   }
 
   addToRenderingGrid(entity, x, y) {
@@ -588,7 +590,7 @@ export class Game {
     var wait = setInterval(function () {
       if (self.map.isLoaded && self.spritesLoaded()) {
         self.ready = true;
-        log.debug('All sprites loaded.');
+        console.debug('All sprites loaded.');
 
         self.loadAudio();
 
@@ -639,11 +641,11 @@ export class Game {
   start() {
     this.tick();
     this.hasNeverStarted = false;
-    log.info('Game loop started.');
+    console.info('Game loop started.');
   }
 
   stop() {
-    log.info('Game stopped.');
+    console.info('Game stopped.');
     this.isStopped = true;
   }
 
@@ -656,7 +658,7 @@ export class Game {
       return this.entities[id];
     }
     else {
-      log.error('Unknown entity id : ' + id, true);
+      console.error('Unknown entity id : ' + id, true);
     }
   }
 
@@ -681,7 +683,7 @@ export class Game {
     //>>includeEnd("prodHost");
 
     this.client.onDispatched(function (host, port) {
-      log.debug('Dispatched to game server ' + host + ':' + port);
+      console.debug('Dispatched to game server ' + host + ':' + port);
 
       self.client.host = host;
       self.client.port = port;
@@ -689,7 +691,7 @@ export class Game {
     });
 
     this.client.onConnected(function () {
-      log.info('Starting client/server handshake');
+      console.info('Starting client/server handshake');
 
       self.player.name = self.username;
       self.started = true;
@@ -703,7 +705,7 @@ export class Game {
         newIds = _.difference(list, knownIds);
 
       self.obsoleteEntities = _.reject(self.entities, function (entity: Entity) {
-        return _.include(knownIds, entity.id) || entity.id === self.player.id;
+        return _.includes(knownIds, entity.id) || entity.id === self.player.id;
       });
 
       // Destroy entities outside of the player's zone group
@@ -716,7 +718,7 @@ export class Game {
     });
 
     this.client.onWelcome(function (id, name, x, y, hp) {
-      log.info('Received player ID from server : ' + id);
+      console.info('Received player ID from server : ' + id);
       self.player.id = id;
       self.playerId = id;
       // Always accept name received from the server which will
@@ -792,7 +794,7 @@ export class Game {
       self.player.onBeforeStep(function () {
         var blockingEntity = self.getEntityAt(self.player.nextGridX, self.player.nextGridY);
         if (blockingEntity && blockingEntity.id !== self.playerId) {
-          log.debug('Blocked by ' + blockingEntity.id);
+          console.debug('Blocked by ' + blockingEntity.id);
         }
         self.unregisterEntityPosition(self.player);
       });
@@ -880,7 +882,7 @@ export class Game {
               self.audioManager.playSound('loot');
             }
 
-            if (item.wasDropped && !_(item.playersInvolved).include(self.playerId)) {
+            if (item.wasDropped && !_(item.playersInvolved).includes(self.playerId)) {
               self.tryUnlockingAchievement('NINJA_LOOT');
             }
           } catch (e) {
@@ -969,12 +971,12 @@ export class Game {
       });
 
       self.player.onDeath(function () {
-        log.info(self.playerId + ' is dead');
+        console.info(self.playerId + ' is dead');
 
         self.player.stopBlinking();
         self.player.setSprite(self.sprites['death']);
         self.player.animate('death', 120, 1, function () {
-          log.info(self.playerId + ' was removed');
+          console.info(self.playerId + ' was removed');
 
           self.removeEntity(self.player);
           self.removeFromRenderingGrid(self.player, self.player.gridX, self.player.gridY);
@@ -1019,12 +1021,12 @@ export class Game {
       });
 
       self.client.onSpawnItem(function (item, x, y) {
-        log.info('Spawned ' + Types.getKindAsString(item.kind) + ' (' + item.id + ') at ' + x + ', ' + y);
+        console.info('Spawned ' + Types.getKindAsString(item.kind) + ' (' + item.id + ') at ' + x + ', ' + y);
         self.addItem(item, x, y);
       });
 
       self.client.onSpawnChest(function (chest, x, y) {
-        log.info('Spawned chest (' + chest.id + ') at ' + x + ', ' + y);
+        console.info('Spawned chest (' + chest.id + ') at ' + x + ', ' + y);
         chest.setSprite(self.sprites[chest.getSpriteName()]);
         chest.setGridPosition(x, y);
         chest.setAnimation('idle_down', 150);
@@ -1034,7 +1036,7 @@ export class Game {
           chest.stopBlinking();
           chest.setSprite(self.sprites['death']);
           chest.setAnimation('death', 120, 1, function () {
-            log.info(chest.id + ' was removed');
+            console.info(chest.id + ' was removed');
             self.removeEntity(chest);
             self.removeFromRenderingGrid(chest, chest.gridX, chest.gridY);
             self.previousClickPosition = {};
@@ -1053,7 +1055,7 @@ export class Game {
 
               self.addEntity(entity);
 
-              log.debug('Spawned ' + Types.getKindAsString(entity.kind) + ' (' + entity.id + ') at ' + entity.gridX + ', ' + entity.gridY);
+              console.debug('Spawned ' + Types.getKindAsString(entity.kind) + ' (' + entity.id + ') at ' + entity.gridX + ', ' + entity.gridY);
 
               if (entity instanceof Character) {
                 entity.onBeforeStep(function () {
@@ -1124,7 +1126,7 @@ export class Game {
                 });
 
                 entity.onDeath(function () {
-                  log.info(entity.id + ' is dead');
+                  console.info(entity.id + ' is dead');
 
                   if (entity instanceof Mob) {
                     // Keep track of where mobs die in order to spawn their dropped items
@@ -1135,7 +1137,7 @@ export class Game {
                   entity.isDying = true;
                   entity.setSprite(self.sprites[entity instanceof Mobs.Rat ? 'rat' : 'death']);
                   entity.animate('death', 120, 1, function () {
-                    log.info(entity.id + ' was removed');
+                    console.info(entity.id + ' was removed');
 
                     self.removeEntity(entity);
                     self.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
@@ -1178,10 +1180,10 @@ export class Game {
             }
           }
           catch (e) {
-            log.error(e);
+            console.error(e);
           }
         } else {
-          log.debug('Character ' + entity.id + ' already exists. Dont respawn.');
+          console.debug('Character ' + entity.id + ' already exists. Dont respawn.');
         }
       });
 
@@ -1189,7 +1191,7 @@ export class Game {
         var entity = self.getEntityById(entityId);
 
         if (entity) {
-          log.info('Despawning ' + Types.getKindAsString(entity.kind) + ' (' + entity.id + ')');
+          console.info('Despawning ' + Types.getKindAsString(entity.kind) + ' (' + entity.id + ')');
 
           if (entity.gridX === self.previousClickPosition.x
             && entity.gridY === self.previousClickPosition.y) {
@@ -1246,7 +1248,7 @@ export class Game {
           } else {
             self.removeEntity(entity);
           }
-          log.debug('Entity was destroyed: ' + entity.id);
+          console.debug('Entity was destroyed: ' + entity.id);
         }
       });
 
@@ -1268,7 +1270,7 @@ export class Game {
           target = self.getEntityById(targetId);
 
         if (attacker && target && attacker.id !== self.playerId) {
-          log.debug(attacker.id + ' attacks ' + target.id);
+          console.debug(attacker.id + ' attacks ' + target.id);
 
           if (attacker && target instanceof Player && target.id !== self.playerId && target.target && target.target.id === attacker.id && attacker.getDistanceToEntity(target) < 3) {
             setTimeout(function () {
@@ -1305,7 +1307,7 @@ export class Game {
         if (mobName === 'boss') {
           self.showNotification('You killed the skeleton king');
         } else {
-          if (_.include(['a', 'e', 'i', 'o', 'u'], mobName[0])) {
+          if (_.includes(['a', 'e', 'i', 'o', 'u'], mobName[0])) {
             self.showNotification('You killed an ' + mobName);
           } else {
             self.showNotification('You killed a ' + mobName);
@@ -1508,7 +1510,7 @@ export class Game {
       this.registerEntityPosition(character);
       this.assignBubbleTo(character);
     } else {
-      log.debug('Teleport out of bounds: ' + x + ', ' + y);
+      console.debug('Teleport out of bounds: ' + x + ', ' + y);
     }
   }
 
@@ -1527,7 +1529,12 @@ export class Game {
   makePlayerGoToItem(item) {
     if (item) {
       this.player.isLootMoving = true;
-      this.makePlayerGoTo(item.gridX, item.gridY);
+      let itemAt = this.getItemAt(item.gridX, item.gridY);
+      if (itemAt instanceof Chest) {
+        this.makePlayerGoTo(item.gridX - 1, item.gridY);
+      } else {
+        this.makePlayerGoTo(item.gridX, item.gridY);
+      }
       this.client.sendLootMove(item, item.gridX, item.gridY);
     }
   }
@@ -1791,7 +1798,7 @@ export class Game {
         this.pathfinder.clearIgnoreList();
       }
     } else {
-      log.error('Error while finding the path to ' + x + ', ' + y + ' for ' + character.id);
+      console.error('Error while finding the path to ' + x + ', ' + y + ' for ' + character.id);
     }
     return path;
   }
@@ -1873,7 +1880,12 @@ export class Game {
       && !this.player.isDead
       && !this.hoveringCollidingTile
       && !this.hoveringPlateauTile) {
-      entity = this.getEntityAt(pos.x, pos.y);
+
+      let entity = this.getEntityAt(pos.x, pos.y);
+
+      if (entity instanceof Chest) {
+        this.player.target = entity 
+      } else { this.player.target = null; }
 
       if (entity instanceof Mob) {
         this.makePlayerAttack(entity);
@@ -2187,7 +2199,7 @@ export class Game {
   }
 
   restart() {
-    log.debug('Beginning restart');
+    console.debug('Beginning restart');
 
     this.entities = {};
     this.initEntityGrid();
@@ -2207,7 +2219,7 @@ export class Game {
       this.renderer.clearScreen(this.renderer.context);
     }
 
-    log.debug('Finished restart');
+    console.debug('Finished restart');
   }
 
   onGameStart(callback) {
@@ -2310,7 +2322,7 @@ export class Game {
           self.removeEntity(entity);
         }
       });
-      log.debug('Removed ' + nb + ' entities: ' + _.pluck(_.reject(this.obsoleteEntities, function (id) {
+      console.debug('Removed ' + nb + ' entities: ' + _.pluck(_.reject(this.obsoleteEntities, function (id) {
         return id === self.player.id
       }), 'id'));
       this.obsoleteEntities = null;
