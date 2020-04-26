@@ -300,7 +300,7 @@ export class Game {
     this.spritesets[0] = {};
     this.spritesets[1] = {};
     this.spritesets[2] = {};
-    _.map(this.spriteNames, spriteName => this.loadSprite(spriteName), this);
+    _.map(this.spriteNames, this.loadSprite, this);
   }
 
   spritesLoaded() {
